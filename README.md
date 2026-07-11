@@ -175,7 +175,5 @@ Possible enhancements include:
 
 **Lady Jean Y. Geverola**
 
-BS Data Science Student
+BS Data Science  
 University of the Philippines Mindanao
-
-This repository was developed as part of a machine learning project to demonstrate practical skills in customer churn prediction using the K-Nearest Neighbors (KNN) algorithm.
