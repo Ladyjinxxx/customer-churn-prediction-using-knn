@@ -1,179 +1,103 @@
-# Customer Churn Prediction Using K-Nearest Neighbors (KNN)
+# Level 1 - Task 3: Customer Churn Prediction Using K-Nearest Neighbors (KNN)
 
-## Overview
+**Codveda Technologies Machine Learning Internship**
 
-This project develops a **Customer Churn Prediction** model using the **K-Nearest Neighbors (KNN)** machine learning algorithm. The objective is to identify customers who are likely to discontinue a company's service based on historical customer information.
+A K-Nearest Neighbors classifier built with scikit-learn to predict customer churn from historical telecom customer data.
 
-The project follows a complete end-to-end machine learning workflow, including:
+## Project Overview
 
-* Exploratory Data Analysis (EDA)
-* Data Cleaning
-* Feature Engineering
-* Feature Scaling
-* Model Training
-* Hyperparameter Tuning
-* Model Evaluation
-* Business Insights
+This project implements an end-to-end classification pipeline: loading and exploring telecom customer data, cleaning and encoding features, scaling them for a distance-based algorithm, tuning the number of neighbors (K), and evaluating the final model through accuracy, precision, recall, F1-score, and a confusion matrix.
 
-The notebook is designed to be beginner-friendly, with detailed comments explaining each step of the implementation.
+**Dataset:** Telecom Customer Churn — pre-split into a training set (`churn-bigml-80.csv`, 2,666 customers) and a testing set (`churn-bigml-20.csv`, 667 customers), 20 original features including call usage, charges, plan types, and customer service calls.
 
----
+## Data Preparation
 
-## Objectives
+| Step | Details |
+|---|---|
+| Missing values | 0 in both training and testing sets |
+| Duplicate rows | 0 in both training and testing sets |
+| Class balance (training) | No Churn: 2,278 (85.45%) · Churn: 388 (14.55%) |
+| Dropped columns | `State`, `Area code` (high-cardinality identifiers, non-predictive) |
+| Encoded columns | `International plan`, `Voice mail plan`, `Churn` (Yes/True → 1, No/False → 0) |
+| Final feature count | 17 numeric features |
+| Feature scaling | `StandardScaler` (required for KNN's distance-based calculations) |
 
-* Predict whether a customer will churn.
-* Prepare raw customer data for machine learning.
-* Train a KNN classification model.
-* Determine the optimal value of **K** through hyperparameter tuning.
-* Evaluate model performance using standard classification metrics.
-* Generate business insights from the prediction results.
+## Hyperparameter Tuning
 
----
+11 values of K were tested to find the best-performing model:
 
-## Dataset
+| K | Accuracy | K | Accuracy |
+|---|---|---|---|
+| 1 | 86.66% | 13 | 89.51% |
+| 3 | 89.81% | 15 | 89.06% |
+| **5** | **90.70%** | 17 | 88.76% |
+| 7 | 89.66% | 19 | 88.61% |
+| 9 | 89.81% | 21 | 88.31% |
+| 11 | 90.10% | | |
 
-This project uses the **Customer Churn Dataset**, which contains customer demographic information, account details, and service usage attributes.
-
-The target variable is:
-
-* **Churn**
-
-  * Yes = Customer left the service
-  * No = Customer remained with the service
-
-Typical features include:
-
-* Customer demographics
-* Account information
-* Service subscriptions
-* Billing information
-* Contract type
-* Tenure
-* Monthly charges
-* Total charges
-
----
-
-## Technologies Used
-
-* Python
-* Google Colab
-* Pandas
-* NumPy
-* Matplotlib
-* Scikit-learn
-
----
-
-## Machine Learning Workflow
-
-### 1. Exploratory Data Analysis (EDA)
-
-* Dataset overview
-* Missing value analysis
-* Data type inspection
-* Summary statistics
-
-### 2. Data Cleaning
-
-* Handle missing values
-* Remove inconsistencies
-* Prepare data for modeling
-
-### 3. Feature Engineering
-
-* Separate features and target variable
-* Encode categorical variables
-* Prepare model-ready data
-
-### 4. Feature Scaling
-
-Since KNN is a distance-based algorithm, feature scaling is performed using **StandardScaler** to ensure all variables contribute equally during distance calculations.
-
-### 5. Model Training
-
-A baseline **K-Nearest Neighbors Classifier** is trained using an initial value of **K = 5**.
-
-### 6. Model Evaluation
-
-The model is evaluated using:
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* Confusion Matrix
-* Classification Report
-
-### 7. Hyperparameter Tuning
-
-Different values of **K** are tested to determine the optimal number of nearest neighbors that produces the highest prediction accuracy.
-
-### 8. Business Insights
-
-The final section translates machine learning results into practical business insights, including customer churn trends and potential retention strategies.
-
----
-
-## Project Structure
-
-```
-customer-churn-prediction-knn/
-│
-├── Level_1_Task3_Customer_Churn_Prediction_Using_KNN.ipynb
-├── dataset/
-├── outputs/
-│   ├── charts/
-│   ├── tables/
-│   └── reports/
-├── README.md
-└── LICENSE
-```
-
----
+**Best K = 5**, with 90.70% accuracy on the test set.
 
 ## Results
 
-The project successfully:
+| Metric | Score |
+|---|---|
+| Accuracy | **90.70%** |
+| Precision (Churn) | 82.35% |
+| Recall (Churn) | 44.21% |
+| F1-score (Churn) | 57.53% |
 
-* Built a customer churn prediction model using KNN.
-* Identified the optimal value of **K** through hyperparameter tuning.
-* Evaluated classification performance using multiple metrics.
-* Produced visualizations that aid in understanding model performance.
-* Generated business-oriented insights that can support customer retention strategies.
+**Classification Report (test set):**
 
----
+| Class | Precision | Recall | F1-score | Support |
+|---|---|---|---|---|
+| No Churn | 0.91 | 0.98 | 0.95 | 572 |
+| Churn | 0.82 | 0.44 | 0.58 | 95 |
 
-## Key Learning Outcomes
+**Confusion Matrix** (rows = actual, columns = predicted):
 
-Through this project, I gained practical experience in:
+| | Predicted: No Churn | Predicted: Churn |
+|---|---|---|
+| **Actual: No Churn** | 563 | 9 |
+| **Actual: Churn** | 53 | 42 |
 
-* Data preprocessing
-* Exploratory Data Analysis
-* Feature engineering
-* Feature scaling
-* Classification using KNN
-* Hyperparameter tuning
-* Model evaluation
-* Translating machine learning results into actionable business insights
+Out of 667 test customers, 605 were correctly classified and 62 were misclassified.
 
----
+## Visualizations
+
+| | |
+|---|---|
+| ![Churn distribution](outputs/charts/churn_distribution.png) | ![Correlation heatmap](outputs/charts/correlation_heatmap.png) |
+| ![Customer service calls vs churn](outputs/charts/customer_service_calls_vs_churn.png) | ![Accuracy vs K](outputs/charts/accuracy_vs_k.png) |
+| ![Confusion matrix (final model)](outputs/charts/confusion_matrix_final_k5.png) | |
+
+## Key Takeaways
+
+- Of the 95 customers who actually churned in the test set, the model correctly caught only 42 (44.21% recall) — more than half of at-risk customers were missed, largely because churners are the minority class (14.55% of training data).
+- When the model does flag a customer as likely to churn, it's correct 82.35% of the time (precision), making its "at risk" flags fairly trustworthy for the retention team to act on.
+- **Customer service calls** and **day-time usage** showed a notable relationship with churn during exploratory analysis, making them useful signals for retention outreach.
+- Because the dataset is imbalanced, accuracy alone (90.70%) is a misleading measure of success on its own — precision, recall, and F1-score together give a fuller picture of model performance.
+
+## Tools & Libraries
+
+Python · scikit-learn · pandas · NumPy · Matplotlib · Seaborn · joblib
+
+## How to Run
+
+1. Open `Level1_Task3_KNN_CustomerChurn.ipynb` in Google Colab.
+2. Make sure `churn-bigml-80.csv` and `churn-bigml-20.csv` are placed in the `Codveda_Internship/Level1_Task3_KNN_CustomerChurn/` folder in Google Drive.
+3. Run all cells top to bottom (mounts Google Drive to load data and save outputs).
+4. Trained model, scaler, charts, tables, and reports are saved automatically to the `outputs/` folder in Google Drive.
 
 ## Future Improvements
 
-Possible enhancements include:
-
-* Testing additional machine learning algorithms such as Logistic Regression, Decision Trees, Random Forest, Support Vector Machine (SVM), and XGBoost.
-* Applying cross-validation for more robust model evaluation.
-* Addressing class imbalance using techniques such as SMOTE.
-* Performing feature selection to improve model performance.
-* Deploying the trained model as a web application using Streamlit or Flask.
+- Apply class-imbalance techniques (e.g. SMOTE or class weighting) to improve recall on the minority churn class.
+- Compare against other classifiers (Logistic Regression, Random Forest, XGBoost) as a benchmark against this KNN baseline.
+- Use cross-validation instead of a single train/test split for a more robust performance estimate.
 
 ---
-
 ## Author
 
 **Lady Jean Y. Geverola**
 
-BS Data Science  
+BS Data Science
 University of the Philippines Mindanao
